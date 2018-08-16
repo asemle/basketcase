@@ -7,51 +7,13 @@ const ADD_TO_CART = 'ADD_TO_CART';
 const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
 const REMOVE_ITEM = 'REMOVE_ITEM';
 const CHECKOUT_REQUEST = 'CHECKOUT_REQUEST';
-const CHECKOUT_SUCCESS = 'CHECKOUT_SUCCESS';
-const CHECKOUT_FAILURE = 'CHECKOUT_FAILURE';
+
 
 const initialState = {
     products:[],
-    basket: []
+    basket: [],
+    checkedout: false
 }
-
-// const receiveProducts = products => ({
-//     type: types.RECEIVE_PRODUCTS,
-//     products
-// })
-
-// export const getAllProducts = () => dispatch => {
-//     shop.getProducts(products => {
-//         dispatch(receiveProducts(products))
-//     })
-// }
-
-// const addToCartUnsafe = productId => ({
-//     type: types.ADD_TO_CART,
-//     productId
-// })
-
-// export const addToCart = productId => (dispatch, getState) => {
-//     if (getState().products.byId[productId].inventory > 0) {
-//         dispatch(addToCartUnsafe(productId))
-//     }
-// }
-
-// export const checkout = products => (dispatch, getState) => {
-//     const { cart } = getState()
-
-//     dispatch({
-//         type: types.CHECKOUT_REQUEST
-//     })
-//     shop.buyProducts(products, () => {
-//         dispatch({
-//             type: types.CHECKOUT_SUCCESS,
-//             cart
-//         })
-//         // Replace the line above with line below to rollback on failure:
-//         // dispatch({ type: types.CHECKOUT_FAILURE, cart })
-//     })
-// }
 
 export function getProducts() {
     const products = axios.get('/products')
@@ -85,6 +47,17 @@ export function removeItem(sku) {
     }
 }
 
+export function checkoutRequest(cardNumber, basket) {
+    console.log({ "basket": basket, "cardNumber": cardNumber })
+    const checkedout = axios.post('/checkout', {"basket":basket, "cardNumber":cardNumber})
+        .then((response) => { console.log(response.data); return response.data }, (err) => console.log(err))
+
+    return {
+        type: CHECKOUT_REQUEST,
+        payload: checkedout
+    }
+}
+
 
 export default function (state = initialState, action) {
     switch (action.type) {
@@ -111,6 +84,8 @@ export default function (state = initialState, action) {
             bask = [...state.basket];
             bask = bask.filter(el => el.sku !== action.payload);
             return Object.assign({}, state, { basket: bask });
+        case CHECKOUT_REQUEST + '_FULFILLED':
+            return Object.assign({}, state, {checkedout: true})
         default:
             return state;
     }

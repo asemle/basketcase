@@ -3,7 +3,7 @@
     width: 457px;
     margin: 0 auto;
     border: 2px solid black;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 header {
@@ -75,7 +75,7 @@ button {
 }
 
 span.name {
-    width: 80px!important;
+    width: 80px !important;
     margin-right: -33px;
 }
 
@@ -93,10 +93,8 @@ span.name {
 }
 
 .basketItem span {
-  width: 50px;
+    width: 50px;
 }
-
-
 
 select {
     -webkit-appearance: none;
@@ -111,18 +109,20 @@ select {
     text-align-last: center;
     font-size: 16px;
 }
+
 .promo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 65%;
-  margin-left: 11px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 65%;
+    margin-left: 11px;
 }
+
 .promo input {
-  width: 68px;
-  height: 26px;
-  text-align: center;
-  border: 2px solid black;
+    width: 68px;
+    height: 26px;
+    text-align: center;
+    border: 2px solid black;
 }
 
 .totals {
@@ -146,4 +146,40 @@ select {
 
 .totals span.label {
     text-align: right;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.cc {
+  text-align: right;
+  margin: 30px 0 0;
+}
+
+.cc .buttonBox {
+  display: block; 
+}
+.cc input {
+  width: 188px;
+  height: 28px;
+  border: 2px solid black;
+  margin: 0 5px 40px 10px;
+
+}
+.checked {
+    height: 260px;
+    position: relative;
+}
+
+.checked div {
+    padding: 25px 15px;
+    color: #708ED0;
+}
+
+.checked footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }

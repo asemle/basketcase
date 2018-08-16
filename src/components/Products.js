@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {getProducts, addToCart} from '../ducks/reducer.js';
 import Product from './Product.js';
-import axios from 'axios';
 
 
 class Products extends Component {

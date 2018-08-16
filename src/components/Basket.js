@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { updateQuantity, removeItem } from '../ducks/reducer.js';
+import { Link, Redirect } from 'react-router-dom';
+import { updateQuantity, removeItem, checkoutRequest } from '../ducks/reducer.js';
 import BasketItem from './BasketItem';
 import Promo from './Promo';
+import CreditCard from './CreditCard';
 
-import axios from 'axios';
 
 class Basket extends Component {
     constructor(props) {
@@ -15,11 +15,13 @@ class Basket extends Component {
             subtotal: "Sub Total Amount",
             promo: "Promotional amount",
             basketTotal: "Basket value amount",
-            promoValue: 0
+            promoValue: 0,
+            redirect: false
         })
-        this.updatePromo = this.updatePromo.bind(this)
+        this.updatePromo = this.updatePromo.bind(this);
+        this.updateTotals = this.updateTotals.bind(this);
+        this.checkout = this.checkout.bind(this);
     }
-
     updatePromo(value) {
         if(!isNaN(parseInt(this.state.subtotal))) {
             console.log("WHTA")
@@ -32,9 +34,8 @@ class Basket extends Component {
             promo: promoamt.toFixed(2),
             basketTotal: total.toFixed(2),
         })
+        }
     }
-    }
-
     updateTotals() {
         if (this.props.basket.length) {
             const subt = this.props.basket.reduce((acc, curr) => this.props.products.find(product => product.sku === curr.sku).price * curr.quantity + acc, 0);
@@ -55,6 +56,16 @@ class Basket extends Component {
             })
         }
     }
+    checkout(cardNumber) {
+        if (!this.props.basket.length) {
+            alert("there is nothing in your shopping cart")
+        } else {
+            this.props.checkoutRequest(cardNumber, this.props.basket);
+            this.setState({
+                redirect: true
+            })
+        }
+    }
     componentWillReceiveProps(nextProps) {
         if(nextProps.basket !== this.props.basket) {
             this.updateTotals();
@@ -67,6 +78,9 @@ class Basket extends Component {
         const basketItems = this.props.basket.map((item, i) => {
             return <BasketItem update={this.props.updateQuantity} products={this.props.products} remove={this.props.removeItem} item={item} key={i}></BasketItem>
         })
+        if (this.state.redirect) {
+            return <Redirect to='/checkout' />
+        }
         return (
             <div className="basket">
                 <header>Basket / checkout view</header>
@@ -100,6 +114,7 @@ class Basket extends Component {
                         <span>{this.state.basketTotal}</span>
                     </div>
                 </div>
+                <CreditCard checkout={this.checkout}/>
                 <footer></footer>
             </div>
         )
@@ -113,4 +128,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { updateQuantity, removeItem })(Basket);
+export default connect(mapStateToProps, { updateQuantity, removeItem, checkoutRequest })(Basket);
